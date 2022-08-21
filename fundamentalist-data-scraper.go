@@ -3,6 +3,7 @@ package main
 import (
 	"strings"
 	"github.com/gocolly/colly/v2"
+	"time"
 )
 
 func GetStockData(assetName string) []byte {
@@ -23,16 +24,19 @@ func GetStockData(assetName string) []byte {
 		minValue := goquerySelection.Find(`div[title="Valor mínimo das últimas 52 semanas"] strong.value`).Text()
 		maxValue := goquerySelection.Find(`div[title="Valor máximo das últimas 52 semanas"] strong.value`).Text()
 		dividendYield := goquerySelection.Find(`div[title="Indicador utilizado para relacionar os proventos pagos por uma companhia e o preço atual de suas ações."] strong.value`).Text()
+		dividendMoney12Months := goquerySelection.Find(`div[title="Soma total de proventos distribuídos nos últimos 12 meses"] span.sub-value`).Text()
 		precoLucro := goquerySelection.Find(`div[title="Dá uma ideia do quanto o mercado está disposto a pagar pelos lucros da empresa."] strong.value`).Text()
 		pVP := goquerySelection.Find(`div[title="Facilita a análise e comparação da relação do preço de negociação de um ativo com seu VPA."] strong.value`).Text()
 		pEbitda := goquerySelection.Find(`div[title="O EBITDA permite conhecer quanto a companhia está gerando de caixa com base exclusivamente em suas atividades operacionais, desconsiderando os impactos financeiros e dos impostos."] strong.value`).Text()
 		valorPatrimonialAcao := goquerySelection.Find(`div[title="Indica qual o valor patrimonial de uma ação."] strong.value`).Text()
 
 		body = body + CreateJsonStringField("asset",assetName, true)
+		body = body + CreateJsonStringField("date",getDate(), true)
 		body = body + CreateJsonStringField("assetValue",assetValue, true)
 		body = body + CreateJsonStringField("minValue",minValue, true)
 		body = body + CreateJsonStringField("maxValue",maxValue, true)
 		body = body + CreateJsonStringField("dividendYield",dividendYield, true)
+		body = body + CreateJsonStringField("dividendMoney12Months",dividendMoney12Months, true)
 		body = body + CreateJsonStringField("precoLucro",precoLucro, true)
 		body = body + CreateJsonStringField("pVP",pVP, true)
 		body = body + CreateJsonStringField("pEbitda",pEbitda, true)
@@ -65,14 +69,17 @@ func GetImobiliaryFundData(assetName string) []byte {
 		minValue := goquerySelection.Find(`div[title="Valor mínimo das últimas 52 semanas"] strong.value`).Text()
 		maxValue := goquerySelection.Find(`div[title="Valor máximo das últimas 52 semanas"] strong.value`).Text()
 		dividendYield := goquerySelection.Find(`div[title="Dividend Yield com base nos últimos 12 meses"] strong.value`).Text()
+		dividendMoney12Months := goquerySelection.Find(`div[title="Soma total de proventos distribuídos nos últimos 12 meses"] span.sub-value`).Text()
 		pVP := goquerySelection.Find(`div.info:has(h3:contains("P/VP")) strong.value`).Text()
 		patrimonioPorCota := goquerySelection.Find(`div.info:has(span:contains("Valor patrim. p/cota")) strong.value`).Text()
 
 		body = body + CreateJsonStringField("asset",assetName, true)
+		body = body + CreateJsonStringField("date",getDate(), true)
 		body = body + CreateJsonStringField("assetValue",assetValue, true)
 		body = body + CreateJsonStringField("minValue",minValue, true)
 		body = body + CreateJsonStringField("maxValue",maxValue, true)
 		body = body + CreateJsonStringField("dividendYield",dividendYield, true)
+		body = body + CreateJsonStringField("dividendMoney12Months",dividendMoney12Months, true)
 		body = body + CreateJsonStringField("pVP",pVP, true)
 		body = body + CreateJsonStringField("patrimonioPorCota",patrimonioPorCota, false)
 		
@@ -98,4 +105,8 @@ func CreateJsonStringField(key string, value string, comma bool) string {
 		commaString = ","
 	}
 	return `"`+key+`":"`+value+`"`+commaString
+}
+
+func getDate() string {
+	return time.Now().Format("2006-01-02")
 }
