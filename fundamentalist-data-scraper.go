@@ -2,6 +2,7 @@ package main
 
 import (
 	"strings"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
 	"time"
 )
@@ -73,6 +74,11 @@ func GetImobiliaryFundData(assetName string) []byte {
 		pVP := goquerySelection.Find(`div.info:has(h3:contains("P/VP")) strong.value`).Text()
 		patrimonioPorCota := goquerySelection.Find(`div.info:has(span:contains("Valor patrim. p/cota")) strong.value`).Text()
 
+		if assetValue == "" {
+			c.Visit("https://statusinvest.com.br/fiagros/"+assetName)
+			return
+		}
+
 		body = body + CreateJsonStringField("asset",assetName, true)
 		body = body + CreateJsonStringField("date",getDate(), true)
 		body = body + CreateJsonStringField("assetValue",assetValue, true)
@@ -92,9 +98,47 @@ func GetImobiliaryFundData(assetName string) []byte {
 	return []byte(body)
 }
 
+func GetAllImoboliaryFundsData(offset int, amountOfElements int) []byte {
+	fundsData := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("fiis.com.br"),
+	)
+
+
+	// Extracts asset value
+	c.OnHTML(`div#funds-index`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		elementCounter := 0
+
+		goquerySelection.Find(`#funds-list #items-wrapper .item`).Each (func(index int,item *goquery.Selection) {
+			symbol := item.Find(".ticker").Text()
+			if symbol != "" && index >= offset && elementCounter < amountOfElements {
+				fundsData = fundsData + string(GetImobiliaryFundData(symbol)) + ","
+				elementCounter = elementCounter + 1
+			}
+		})
+		
+	})
+
+	c.Visit("https://fiis.com.br/lista-de-fundos-imobiliarios/")
+
+	if len(fundsData) > 0 {
+		// Removes last comma
+		fundsData = fundsData[:len(fundsData) - 1]
+	}
+
+	fundsData = "["+fundsData+"]"
+
+	return []byte(fundsData)
+}
+
 // Removes unwanted characters from fetched string
 func ClearString(value string) string {
-	return strings.TrimSuffix(value,"-")
+	return strings.Trim(strings.TrimSuffix(value,"-"),"\n")
 }
 
 func CreateJsonStringField(key string, value string, comma bool) string {
