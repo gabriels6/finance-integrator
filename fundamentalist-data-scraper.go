@@ -5,6 +5,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
 	"time"
+	"fmt"
 )
 
 func GetStockData(assetName string) []byte {
@@ -134,6 +135,47 @@ func GetAllImoboliaryFundsData(offset int, amountOfElements int) []byte {
 	fundsData = "["+fundsData+"]"
 
 	return []byte(fundsData)
+}
+
+func GetAllFundamentslistStocksData(pages int, offset int) []byte {
+	stocksData := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("maisretorno.com"),
+	)
+
+
+	// Extracts asset value
+	c.OnHTML(`main.app`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		goquerySelection.Find(`ul.MuiList-root li`).Each (func(index int,item *goquery.Selection) {
+			symbol := item.Find("a h6").Text()
+			if symbol != "" {
+				stocksData = stocksData + string(GetStockData(symbol)) + ","
+			}
+		})
+		
+	})
+
+	pagesCounter := 0
+
+
+	for pagesCounter <= pages {
+		c.Visit(fmt.Sprint("https://maisretorno.com/lista-acoes/page/",pagesCounter+offset))
+		pagesCounter += 1
+	}
+
+	if len(stocksData) > 0 {
+		// Removes last comma
+		stocksData = stocksData[:len(stocksData) - 1]
+	}
+
+	stocksData = "["+stocksData+"]"
+
+	return []byte(stocksData)
 }
 
 // Removes unwanted characters from fetched string

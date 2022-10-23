@@ -51,3 +51,25 @@ func GetFundamentalistAllImobiliaryFundData(c *gin.Context) {
 
 	c.Data(http.StatusOK, "application/json", GetAllImoboliaryFundsData(resultOffset, resultAmountOfElements))
 }
+
+func GetFundamentalistAllStocksData(c *gin.Context) {
+	pages, okPages := c.GetQuery("pages")
+	offset, okOffset := c.GetQuery("offset")
+	if !okPages {
+		pages = "1"
+	}
+	if !okOffset {
+		offset = "1"
+	}
+	pagesAmount, errorPagesAmount := strconv.Atoi(pages)
+	offsetAmount, errorOffsetAmount := strconv.Atoi(offset)
+	if errorPagesAmount != nil {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Error converting param: 'pages'"}`))
+		return
+	}
+	if errorOffsetAmount != nil {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Error converting param: 'offset'"}`))
+		return
+	}
+	c.Data(http.StatusOK, "application/json", GetAllFundamentslistStocksData(pagesAmount, offsetAmount))
+}
