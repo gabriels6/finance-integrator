@@ -160,7 +160,7 @@ func GetAllFundamentslistStocksData(pages int, offset int) []byte {
 		
 	})
 
-	pagesCounter := 0
+	pagesCounter := 1
 
 
 	for pagesCounter <= pages {
