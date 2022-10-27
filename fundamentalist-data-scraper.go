@@ -5,7 +5,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
 	"time"
-	"fmt"
 )
 
 func GetStockData(assetName string) []byte {
@@ -88,7 +87,7 @@ func GetImobiliaryFundData(assetName string) []byte {
 		body = body + CreateJsonStringField("dividendYield",dividendYield, true)
 		body = body + CreateJsonStringField("dividendMoney12Months",dividendMoney12Months, true)
 		body = body + CreateJsonStringField("pVP",pVP, true)
-		body = body + CreateJsonStringField("patrimonioPorCota",patrimonioPorCota, false)
+		body = body + CreateJsonStringField("patrimonioPorCota",patrimonioPorCota, true)
 		
 	})
 
@@ -143,30 +142,32 @@ func GetAllFundamentslistStocksData(pages int, offset int) []byte {
 	// Instantiate default collector
 	c := colly.NewCollector(
 		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
-		colly.AllowedDomains("maisretorno.com"),
+		colly.AllowedDomains("www.infomoney.com.br"),
 	)
 
+	pagesCounter := 0
 
 	// Extracts asset value
-	c.OnHTML(`main.app`, func(e *colly.HTMLElement) {
+	c.OnHTML(`body`, func(e *colly.HTMLElement) {
 		goquerySelection := e.DOM
 
-		goquerySelection.Find(`ul.MuiList-root li`).Each (func(index int,item *goquery.Selection) {
-			symbol := item.Find("a h6").Text()
-			if symbol != "" {
-				stocksData = stocksData + string(GetStockData(symbol)) + ","
+		goquerySelection.Find(`tbody tr`).Each (func(index int,item *goquery.Selection) {
+			if(pagesCounter < pages+offset && pagesCounter > offset) {
+				symbol := item.Find("td a").Text()
+				if symbol != "" {
+					stockItem := GetStockData(symbol)
+					if string(stockItem) != "{}" {
+						stocksData = stocksData + string(stockItem) + ","
+					}
+					
+				}
 			}
+			pagesCounter += 1
 		})
 		
 	})
 
-	pagesCounter := 0
-
-
-	for pagesCounter <= pages {
-		c.Visit(fmt.Sprint("https://maisretorno.com/lista-acoes/page/",pagesCounter+offset))
-		pagesCounter += 1
-	}
+	c.Visit("https://www.infomoney.com.br/cotacoes/empresas-b3/")
 
 	if len(stocksData) > 0 {
 		// Removes last comma
