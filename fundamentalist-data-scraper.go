@@ -168,7 +168,7 @@ func GetAllFundamentslistStocksData(pages int, offset int) []byte {
 	})
 
 	c.Visit("https://www.infomoney.com.br/cotacoes/empresas-b3/")
-
+	
 	if len(stocksData) > 0 {
 		// Removes last comma
 		stocksData = stocksData[:len(stocksData) - 1]
@@ -177,6 +177,68 @@ func GetAllFundamentslistStocksData(pages int, offset int) []byte {
 	stocksData = "["+stocksData+"]"
 
 	return []byte(stocksData)
+}
+
+
+// DIVIDENDOS
+func GetDividends(assetName string) []byte {
+	dividends := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("statusinvest.com.br"),
+	)
+
+	// Extracts asset value
+	c.OnHTML(`main#main-2`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		goquerySelection.Find(`#earning-section tbody tr`).Each (func(index int,item *goquery.Selection) {
+
+			paymentType := item.Find(`td:nth-of-type(1)`).Text()
+
+			if (paymentType == "Dividendo") {
+				paymentType = "Dividendo"
+			} else {
+				paymentType = "JSCP"
+			}
+
+			paymentValue := item.Find(`td:nth-of-type(4)`).Text()
+
+			if (len(paymentValue) > 0) {
+				paymentValue = paymentValue[:len(dividends) + 8 - len(dividends)]
+			}
+			
+
+			body := ""
+			body = body + CreateJsonStringField("assetName",assetName, true)
+			body = body + CreateJsonStringField("type",paymentType, true)
+			body = body + CreateJsonStringField("comDate",item.Find(`td:nth-of-type(2)`).Text(), true)
+			body = body + CreateJsonStringField("paymentDate",item.Find(`td:nth-of-type(3)`).Text(), true)
+			body = body + CreateJsonStringField("value",paymentValue, false)
+
+			body = "{"+body+"}"
+
+			dividends += body + ","
+		})
+		
+		
+		
+	})
+
+
+	c.Visit("https://statusinvest.com.br/acoes/"+assetName)
+
+	if len(dividends) > 0 {
+		// Removes last comma
+		dividends = dividends[:len(dividends) - 1]
+	}
+
+	dividends = "["+dividends+"]"
+
+
+	return []byte(dividends)
 }
 
 // Removes unwanted characters from fetched string

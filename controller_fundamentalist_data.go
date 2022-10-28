@@ -73,3 +73,12 @@ func GetFundamentalistAllStocksData(c *gin.Context) {
 	}
 	c.Data(http.StatusOK, "application/json", GetAllFundamentslistStocksData(pagesAmount, offsetAmount))
 }
+
+func GetDividendsData(c *gin.Context) {
+	asset, okAsset := c.GetQuery("asset")
+	if !okAsset {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'asset'"}`))
+		return
+	}
+	c.Data(http.StatusOK, "application/json", GetDividends(asset))	
+}
