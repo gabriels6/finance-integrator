@@ -87,7 +87,7 @@ func GetImobiliaryFundData(assetName string) []byte {
 		body = body + CreateJsonStringField("dividendYield",dividendYield, true)
 		body = body + CreateJsonStringField("dividendMoney12Months",dividendMoney12Months, true)
 		body = body + CreateJsonStringField("pVP",pVP, true)
-		body = body + CreateJsonStringField("patrimonioPorCota",patrimonioPorCota, true)
+		body = body + CreateJsonStringField("patrimonioPorCota",patrimonioPorCota, false)
 		
 	})
 
@@ -115,9 +115,9 @@ func GetAllImoboliaryFundsData(offset int, amountOfElements int) []byte {
 		elementCounter := 0
 
 		goquerySelection.Find(`#funds-list #items-wrapper .item`).Each (func(index int,item *goquery.Selection) {
-			symbol := item.Find(".ticker").Text()
+			symbol := item.Find(".ticker a").Text()
 			if symbol != "" && index >= offset && elementCounter < amountOfElements {
-				fundsData = fundsData + string(GetImobiliaryFundData(symbol)) + ","
+				fundsData = fundsData + string(GetImobiliaryFundData(strings.TrimSpace(symbol))) + ","
 				elementCounter = elementCounter + 1
 			}
 		})
