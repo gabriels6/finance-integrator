@@ -25,5 +25,6 @@ func Routes() *gin.Engine {
 	router.GET("/fundamentalist-data/imobiliary-funds",GetFundamentalistAllImobiliaryFundData)
 	router.GET("/fundamentalist-data/stocks",GetFundamentalistAllStocksData)
 	router.GET("/fundamentalist-data/dividends",GetDividendsData)
+	router.GET("/technical-data/stock",GetTechnicalStocksData)
 	return router
 }
