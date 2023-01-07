@@ -195,6 +195,8 @@ func GetDividends(assetName string) []byte {
 
 		dividends = e.ChildAttr("input[name='results']", "value")
 
+		dividends = strings.Replace(dividends, "\"y\":0", "\"assetName\":\"" + assetName + "\"" , 400)
+		dividends = strings.Replace(dividends, "\"m\":0,\"d\":0,", "" , 400)
 		dividends = strings.Replace(dividends, "\"ed\"", "\"comDate\"", 400)
 		dividends = strings.Replace(dividends, "\"pd\"", "\"paymentDate\"", 400)
 		dividends = strings.Replace(dividends, "\"et\"", "\"type\"", 400)
