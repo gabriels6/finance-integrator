@@ -195,11 +195,11 @@ func GetDividends(assetName string) []byte {
 
 		dividends = e.ChildAttr("input[name='results']", "value")
 
-		dividends = strings.Replace(dividends, "\"ed\"", "\"comDate\"", 100)
-		dividends = strings.Replace(dividends, "\"pd\"", "\"paymentDate\"", 100)
-		dividends = strings.Replace(dividends, "\"et\"", "\"type\"", 100)
-		dividends = strings.Replace(dividends, "\"etd\"", "\"description\"", 100)
-		dividends = strings.Replace(dividends, "\"v\"", "\"value\"", 100)
+		dividends = strings.Replace(dividends, "\"ed\"", "\"comDate\"", 400)
+		dividends = strings.Replace(dividends, "\"pd\"", "\"paymentDate\"", 400)
+		dividends = strings.Replace(dividends, "\"et\"", "\"type\"", 400)
+		dividends = strings.Replace(dividends, "\"etd\"", "\"description\"", 400)
+		dividends = strings.Replace(dividends, "\"v\"", "\"value\"", 400)
 		
 		
 		
