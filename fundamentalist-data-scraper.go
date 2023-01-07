@@ -210,6 +210,13 @@ func GetDividends(assetName string) []byte {
 
 	c.Visit("https://statusinvest.com.br/acoes/"+assetName)
 
+	if dividends == "" {
+		c.Visit("https://statusinvest.com.br/fundos-imobiliarios/"+assetName)
+		if dividends == "" {
+			c.Visit("https://statusinvest.com.br/fiagros/"+assetName)
+		}
+	}
+
 
 	return []byte(dividends)
 }
