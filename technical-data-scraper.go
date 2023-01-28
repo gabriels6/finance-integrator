@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gocolly/colly/v2"
+	"github.com/PuerkitoBio/goquery"
 )
 
 func GetCurrentAssetData(assets []string) []byte {
@@ -30,10 +31,12 @@ func GetInvestingData(asset string) string {
 	c.OnHTML(`#__next`, func(e *colly.HTMLElement) {
 		goquerySelection := e.DOM
 
-		price := goquerySelection.Find(`div[data-test=instrument-header-details] span[data-test=instrument-price-last]`).Text()
-		if len(price) > 6 {
-			price = price[len(price)-5:len(price)]
-		}
+		price := ""
+		goquerySelection.Find(`div[data-test=instrument-header-details] span[data-test=instrument-price-last]`).Each (func(index int,item *goquery.Selection) {
+			price = item.Text()
+		})
+		
+
 		body = body + CreateJsonStringField("asset",asset, true)
 		body = body + CreateJsonStringField("price",price, false)
 		
