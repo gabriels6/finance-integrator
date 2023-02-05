@@ -207,14 +207,19 @@ func GetDividends(assetName string) []byte {
 		
 	})
 
+	urlArray := []string { 
+		"https://statusinvest.com.br/acoes/",
+		"https://statusinvest.com.br/acoes/eua/",
+		"https://statusinvest.com.br/fundos-imobiliarios/",
+		"https://statusinvest.com.br/fiagros/",
+		"https://statusinvest.com.br/etf/eua/",
+	}
 
-	c.Visit("https://statusinvest.com.br/acoes/"+assetName)
-
-	if dividends == "" {
-		c.Visit("https://statusinvest.com.br/fundos-imobiliarios/"+assetName)
-		if dividends == "" {
-			c.Visit("https://statusinvest.com.br/fiagros/"+assetName)
+	for _, url := range urlArray {
+		if dividends != "" {
+			break;
 		}
+		c.Visit(url+assetName)
 	}
 
 
