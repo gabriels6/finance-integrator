@@ -82,3 +82,13 @@ func GetDividendsData(c *gin.Context) {
 	}
 	c.Data(http.StatusOK, "application/json", GetDividends(asset))	
 }
+
+func GetHistoricalExchangeRatesData(c *gin.Context) {
+	fromCurrency, okFromCurrency := c.GetQuery("fromCurrency")
+	toCurrency, okToCurrency := c.GetQuery("toCurrency")
+	if !okFromCurrency || !okToCurrency {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Params 'fromCurrency' or 'toCurrency' not found."}`))
+		return
+	}
+	c.Data(http.StatusOK, "application/json", GetHistoricalExchangeRates(fromCurrency, toCurrency))
+}

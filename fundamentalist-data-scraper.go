@@ -226,6 +226,52 @@ func GetDividends(assetName string) []byte {
 	return []byte(dividends)
 }
 
+//EXCHANGE RATES
+func GetHistoricalExchangeRates(fromCurrency string, toCurrency string) []byte {
+
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("www.exchangerates.org.uk"),
+	)
+
+	rates := ""
+
+	// Extracts asset value
+	c.OnHTML(`div#content-wrap`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		goquerySelection.Find("table#hist tr").Each (func(index int,item *goquery.Selection) {
+
+			if(index > 1) {
+				rateItem := ""
+
+				dateString := strings.Split(item.Find(":nth-child(1)").Text(),"for")
+				rateString := strings.Split(item.Find(":nth-child(2)").Text(),"=")
+
+				if len(dateString) > 1 && len(rateString) > 1{
+					rateItem += rateItem + CreateJsonStringField("date",strings.Trim(dateString[1]," "), true)
+					rateItem += rateItem + CreateJsonStringField(fromCurrency,strings.Split(strings.Trim(rateString[0]," ")," ")[0], true)
+					rateItem += rateItem + CreateJsonStringField(toCurrency,strings.Split(strings.Trim(rateString[1]," ")," ")[0], false)
+
+					rates += "{"+rateItem+"},"
+				}
+			}
+		})
+	
+	})
+
+	c.Visit("https://www.exchangerates.org.uk/"+strings.ToUpper(fromCurrency)+"-"+strings.ToUpper(toCurrency)+"-exchange-rate-history.html")
+
+	if len(rates) > 0 {
+		// Removes last comma
+		rates = rates[:len(rates) - 1]
+	}
+
+	rates = "["+rates+"]"
+
+	return []byte(rates)
+}
+
 // Removes unwanted characters from fetched string
 func ClearString(value string) string {
 	return strings.Trim(strings.TrimSuffix(value,"-"),"\n")
