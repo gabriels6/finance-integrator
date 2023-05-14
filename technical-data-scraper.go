@@ -32,7 +32,7 @@ func GetInvestingData(asset string) string {
 		goquerySelection := e.DOM
 
 		price := ""
-		goquerySelection.Find(`div[data-test=instrument-header-details] span[data-test=instrument-price-last]`).Each (func(index int,item *goquery.Selection) {
+		goquerySelection.Find(`div.items-center div.leading-9`).Each (func(index int,item *goquery.Selection) {
 			price = item.Text()
 		})
 		
