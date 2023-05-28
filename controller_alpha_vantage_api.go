@@ -31,3 +31,12 @@ func GetTimeSeriesWeekly(c *gin.Context) {
 	}
 	c.Data(http.StatusOK, "application/json", TimeSeriesWeekly(symbol))
 }
+
+func GetOverview(c *gin.Context) {
+	symbol, ok := c.GetQuery("symbol")
+	if !ok {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbol'"}`))
+		return
+	}
+	c.Data(http.StatusOK, "application/json", Overview(symbol))
+}

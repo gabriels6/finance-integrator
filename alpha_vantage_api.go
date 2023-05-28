@@ -11,3 +11,7 @@ func GlobalQuotes(symbol string) []byte {
 func TimeSeriesWeekly(symbol string) []byte {
 	return CallApi("https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=" + symbol + "&apikey=" + GetEnv("ALPHA_VANTAGE_API_KEY"))
 }
+
+func Overview(symbol string) []byte {
+	return CallApi("https://www.alphavantage.co/query?function=OVERVIEW&symbol=" + symbol + "&apikey=" + GetEnv("ALPHA_VANTAGE_API_KEY"))
+}
