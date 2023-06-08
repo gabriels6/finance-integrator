@@ -30,6 +30,7 @@ func GetStockData(assetName string) []byte {
 		pVP := goquerySelection.Find(`div[title="Facilita a análise e comparação da relação do preço de negociação de um ativo com seu VPA."] strong.value`).Text()
 		pEbitda := goquerySelection.Find(`div[title="O EBITDA permite conhecer quanto a companhia está gerando de caixa com base exclusivamente em suas atividades operacionais, desconsiderando os impactos financeiros e dos impostos."] strong.value`).Text()
 		valorPatrimonialAcao := goquerySelection.Find(`div[title="Indica qual o valor patrimonial de uma ação."] strong.value`).Text()
+		lucroPorAcao := goquerySelection.Find(`div[title="Indicar se a empresa é ou não lucrativa. Se este número estiver negativo, a empresa está com margens baixas, acumulando prejuízos."] strong.value`).Text()
 
 		body = body + CreateJsonStringField("asset",assetName, true)
 		body = body + CreateJsonStringField("date",getDate(), true)
@@ -41,7 +42,8 @@ func GetStockData(assetName string) []byte {
 		body = body + CreateJsonStringField("precoLucro",precoLucro, true)
 		body = body + CreateJsonStringField("pVP",pVP, true)
 		body = body + CreateJsonStringField("pEbitda",pEbitda, true)
-		body = body + CreateJsonStringField("vpa",valorPatrimonialAcao, false)
+		body = body + CreateJsonStringField("vpa",valorPatrimonialAcao, true)
+		body = body + CreateJsonStringField("lpa",lucroPorAcao, false)
 		
 	})
 
