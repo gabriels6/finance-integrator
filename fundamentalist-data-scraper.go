@@ -18,7 +18,7 @@ func GetStockData(assetName string) []byte {
 	)
 
 	// Extracts asset value
-	c.OnHTML(`div.container div.paper`, func(e *colly.HTMLElement) {
+	c.OnHTML(`main`, func(e *colly.HTMLElement) {
 		goquerySelection := e.DOM
 
 		assetValue := goquerySelection.Find(`div[title="Valor atual do ativo"] strong.value`).Text()
@@ -32,6 +32,10 @@ func GetStockData(assetName string) []byte {
 		valorPatrimonialAcao := goquerySelection.Find(`div[title="Indica qual o valor patrimonial de uma ação."] strong.value`).Text()
 		lucroPorAcao := goquerySelection.Find(`div[title="Indicar se a empresa é ou não lucrativa. Se este número estiver negativo, a empresa está com margens baixas, acumulando prejuízos."] strong.value`).Text()
 		variacaoDiaria := strings.Replace(goquerySelection.Find(`span[title="Variação do valor do ativo com base no dia anterior"] b`).Text(), "%", "" , 400)
+
+		if(assetValue==""){
+			return
+		}
 
 		body = body + CreateJsonStringField("asset",assetName, true)
 		body = body + CreateJsonStringField("date",getDate(), true)
@@ -49,7 +53,20 @@ func GetStockData(assetName string) []byte {
 		
 	})
 
-	c.Visit("https://statusinvest.com.br/acoes/"+assetName)
+	urlArray := []string { 
+		"https://statusinvest.com.br/acoes/",
+		"https://statusinvest.com.br/acoes/eua/",
+		"https://statusinvest.com.br/fundos-imobiliarios/",
+		"https://statusinvest.com.br/fiagros/",
+		"https://statusinvest.com.br/etf/eua/",
+	}
+
+	for _, url := range urlArray {
+		if body != "" {
+			break;
+		}
+		c.Visit(url+assetName)
+	}
 
 	body = "{"+body+"}"
 
