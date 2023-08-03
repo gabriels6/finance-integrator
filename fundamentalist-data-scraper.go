@@ -56,6 +56,7 @@ func GetStockData(assetName string) []byte {
 	urlArray := []string { 
 		"https://statusinvest.com.br/acoes/",
 		"https://statusinvest.com.br/acoes/eua/",
+		"https://statusinvest.com.br/reits/",
 		"https://statusinvest.com.br/fundos-imobiliarios/",
 		"https://statusinvest.com.br/fiagros/",
 		"https://statusinvest.com.br/etf/eua/",
@@ -231,6 +232,7 @@ func GetDividends(assetName string) []byte {
 	urlArray := []string { 
 		"https://statusinvest.com.br/acoes/",
 		"https://statusinvest.com.br/acoes/eua/",
+		"https://statusinvest.com.br/reits/",
 		"https://statusinvest.com.br/fundos-imobiliarios/",
 		"https://statusinvest.com.br/fiagros/",
 		"https://statusinvest.com.br/etf/eua/",
