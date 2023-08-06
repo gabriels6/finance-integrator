@@ -15,3 +15,11 @@ func TimeSeriesWeekly(symbol string) []byte {
 func Overview(symbol string) []byte {
 	return CallApi("https://www.alphavantage.co/query?function=OVERVIEW&symbol=" + symbol + "&apikey=" + GetEnv("ALPHA_VANTAGE_API_KEY"))
 }
+
+func News(symbols string, topics string, sort string, limit string) []byte {
+	return CallApi("https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=" + symbols + "&topics="+ topics +"&sort="+ sort +"&limit="+ limit +"&apikey=" + GetEnv("ALPHA_VANTAGE_API_KEY"))
+}
+
+func ExchangeRate(from_currency string, to_currency string) []byte {
+	return CallApi("https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency="+from_currency+"&to_currency="+to_currency+"&apikey=" + GetEnv("ALPHA_VANTAGE_API_KEY"))
+}

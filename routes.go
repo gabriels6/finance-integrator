@@ -21,6 +21,8 @@ func Routes() *gin.Engine {
 	router.GET("/alpha-vantage/global-quote", GetQuote)
 	router.GET("/alpha-vantage/time-series-weekly", GetTimeSeriesWeekly)
 	router.GET("/alpha-vantage/overview", GetOverview)
+	router.GET("/alpha-vantage/news", GetNews)
+	router.GET("/alpha-vantage/exchange-rate", GetExRate)
 	router.GET("/fundamentalist-data/stock", GetFundamentalistStockData)
 	router.GET("/fundamentalist-data/imobiliary-fund", GetFundamentalistImobiliaryFundData)
 	router.GET("/fundamentalist-data/imobiliary-funds",GetFundamentalistAllImobiliaryFundData)
