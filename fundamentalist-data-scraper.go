@@ -32,6 +32,9 @@ func GetStockData(assetName string) []byte {
 		valorPatrimonialAcao := goquerySelection.Find(`div[title="Indica qual o valor patrimonial de uma ação."] strong.value`).Text()
 		lucroPorAcao := goquerySelection.Find(`div[title="Indicar se a empresa é ou não lucrativa. Se este número estiver negativo, a empresa está com margens baixas, acumulando prejuízos."] strong.value`).Text()
 		variacaoDiaria := strings.Replace(goquerySelection.Find(`span[title="Variação do valor do ativo com base no dia anterior"] b`).Text(), "%", "" , 400)
+		roe := goquerySelection.Find(`div[title="Mede a capacidade de agregar valor de uma empresa a partir de seus próprios recursos e do dinheiro de investidores."] strong.value`).Text()
+		roa := goquerySelection.Find(`div[title="O retorno sobre os ativos ou Return on Assets, é um indicador de rentabilidade, que calcula a capacidade de uma empresa gerar lucro a partir dos seus ativos, além de indiretamente, indicar a eficiência dos seus gestores."] strong.value`).Text()
+		margemLucro := goquerySelection.Find(`div[title="Revela a porcentagem de lucro em relação às receitas de uma empresa."] strong.value`).Text()
 
 		if(assetValue==""){
 			return
@@ -49,6 +52,9 @@ func GetStockData(assetName string) []byte {
 		body = body + CreateJsonStringField("pEbitda",pEbitda, true)
 		body = body + CreateJsonStringField("vpa",valorPatrimonialAcao, true)
 		body = body + CreateJsonStringField("variacaoDiaria",variacaoDiaria, true)
+		body = body + CreateJsonStringField("roe",roe, true)
+		body = body + CreateJsonStringField("roa",roa, true)
+		body = body + CreateJsonStringField("margemLucro",margemLucro, true)
 		body = body + CreateJsonStringField("lpa",lucroPorAcao, false)
 		
 	})
