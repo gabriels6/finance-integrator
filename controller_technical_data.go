@@ -14,3 +14,17 @@ func GetTechnicalStocksData(c *gin.Context) {
 	}
 	c.Data(http.StatusOK, "application/json", GetCurrentAssetData(strings.Split(assets,",")))	
 }
+
+func GetInvestingExchangeRateRoute(c *gin.Context) {
+	fromCurrency, okFromCurrency := c.GetQuery("fromCurrency")
+	toCurrency, okToCurrency := c.GetQuery("toCurrency")
+	if !okFromCurrency {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'fromCurrency'"}`))
+		return
+	}
+	if !okToCurrency {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'toCurrency'"}`))
+		return
+	}
+	c.Data(http.StatusOK, "application/json", GetInvestingExchangeRate(fromCurrency, toCurrency))	
+}
