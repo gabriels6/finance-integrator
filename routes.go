@@ -32,6 +32,7 @@ func Routes() *gin.Engine {
 	router.GET("/technical-data/stock",GetTechnicalStocksData)
 	router.GET("/technical-data/exchange-rate",GetInvestingExchangeRateRoute)
 	router.GET("/indexes",GetIndexesData)
+	router.GET("/investing/indexes",GetIndexByInvesting)
 	router.GET("/fixed-income/government",GetBrazilianGovernmentBondsRoute)
 	router.GET("/fixed-income/debentures",GetDebenturesRoute)
 	return router

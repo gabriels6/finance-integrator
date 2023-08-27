@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gocolly/colly/v2"
 	"github.com/PuerkitoBio/goquery"
+	"strings"
 )
 
 func CDIData() []byte {
@@ -102,6 +103,90 @@ func IBOVData() []byte {
 	}
 
 	body = "["+body+"]"
+
+	return []byte(body)
+}
+
+func IndexDataByInvesting(symbols string) []byte {
+
+	body := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("br.investing.com"),
+	)
+
+	indexEndpoint := ""
+	queryString := ""
+
+	symbolName := ""
+
+	// Extracts asset value
+	c.OnHTML(`body`, func(e *colly.HTMLElement) {
+
+		goquerySelection := e.DOM
+
+		indexItem := ""
+			
+		value := goquerySelection.Find(queryString).Text()
+
+		indexItem = indexItem + CreateJsonStringField("symbol",symbolName, true)
+		indexItem = indexItem + CreateJsonStringField("value",value, false)
+
+		body = body + "{"+indexItem+"},"
+	})
+
+	for _, symbol := range strings.Split(symbols, ",") {
+		symbol = strings.ToLower(symbol)
+		symbolName = symbol
+	
+		if symbol == "ipca" {
+			indexEndpoint = "economic-calendar/brazilian-cpi-410"
+			queryString = "#releaseInfo span:nth-child(2) div"
+		}
+	
+		if symbol == "ibov" {
+			indexEndpoint = "indices/bovespa"
+			queryString = ".text-5xl.font-bold.leading-9"
+		}
+	
+		if symbol == "ibrx" {
+			indexEndpoint = "indices/brazil-index"
+			queryString = ".text-5xl.font-bold.leading-9"
+		}
+	
+		if symbol == "selic" {
+			indexEndpoint = "economic-calendar/brazilian-interest-rate-decision-415"
+			queryString = "#releaseInfo span:nth-child(2) div"
+		}
+	
+		if symbol == "sp500" {
+			indexEndpoint = "indices/us-spx-500"
+			queryString = ".text-5xl.font-bold.leading-9"
+		}
+	
+		if symbol == "idiv" {
+			indexEndpoint = "indices/bovespa-dividend"
+			queryString = ".text-5xl.font-bold.leading-9"
+		}
+	
+		if symbol == "ifix" {
+			indexEndpoint = "indices/bm-fbovespa-real-estate-ifix"
+			queryString = ".text-5xl.font-bold.leading-9"
+		}
+		
+
+		c.Visit("https://br.investing.com/"+indexEndpoint)
+	}
+
+	if len(body) > 0 {
+		// Removes last comma
+		body = body[:len(body) - 1]
+	}
+
+	body = "["+body+"]"
+	
 
 	return []byte(body)
 }

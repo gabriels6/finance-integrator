@@ -20,3 +20,12 @@ func GetIndexesData(c *gin.Context) {
 	}
 	
 }
+
+func GetIndexByInvesting(c *gin.Context) {
+	symbols, okSymbols := c.GetQuery("symbols")
+	if !okSymbols {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbols'"}`))
+		return
+	}
+	c.Data(http.StatusOK, "application/json", IndexDataByInvesting(symbols))	
+}
