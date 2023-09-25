@@ -4,6 +4,7 @@ import (
 	"github.com/gocolly/colly/v2"
 	"github.com/PuerkitoBio/goquery"
 	"strings"
+	"time"
 )
 
 func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
@@ -39,6 +40,7 @@ func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
 func GetCurrentAssetData(assets []string) []byte {
 	results := ""
 	for _, item := range assets {
+		time.Sleep(time.Second * 0.010)
 		results = results + GetInvestingData(item) + ","
 	}
 	if len(results) > 0 {
@@ -59,7 +61,7 @@ func GetInvestingData(asset string) string {
 	)
 
 	// Extracts asset value
-	c.OnHTML(`#__next`, func(e *colly.HTMLElement) {
+	c.OnHTML(`body`, func(e *colly.HTMLElement) {
 		goquerySelection := e.DOM
 
 		price := ""
