@@ -2,9 +2,7 @@ package main
 
 import (
 	"github.com/gocolly/colly/v2"
-	"github.com/PuerkitoBio/goquery"
 	"strings"
-	"time"
 )
 
 func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
@@ -21,7 +19,7 @@ func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
 		goquerySelection := e.DOM
 
 		price := ""
-		price = goquerySelection.Find(`span[data-test="instrument-price-last"]`).Text()
+		price = goquerySelection.Find(`.text-base`).Text()
 		
 
 		body = body + CreateJsonStringField("from",fromCurrency, true)
@@ -39,45 +37,41 @@ func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
 
 func GetCurrentAssetData(assets []string) []byte {
 	results := ""
+	body := ""
+	asset := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("br.investing.com"),
+		colly.AllowURLRevisit(),
+	)
+
+
+	// Extracts asset value
+	c.OnHTML(`#__next`, func(e *colly.HTMLElement) {
+		body = ""
+
+		goquerySelection := e.DOM
+
+		price := ""
+		price = goquerySelection.Find(`.flex div.leading-9`).Text()
+
+		body = body + CreateJsonStringField("asset",asset, true)
+		body = body + CreateJsonStringField("price",price, false)
+	})
+
 	for _, item := range assets {
-		time.Sleep(time.Second * 0.010)
-		results = results + GetInvestingData(item) + ","
+		asset = item
+		c.Visit("https://br.investing.com/equities/"+asset)
+		body = "{"+body+"}"
+		results = results + body + ","
 	}
+
 	if len(results) > 0 {
 		// Removes last comma
 		results = results[:len(results) - 1]
 	}
 	results = "["+results+"]"
 	return []byte(results)
-}
-
-func GetInvestingData(asset string) string {
-	body := ""
-
-	// Instantiate default collector
-	c := colly.NewCollector(
-		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
-		colly.AllowedDomains("br.investing.com"),
-	)
-
-	// Extracts asset value
-	c.OnHTML(`body`, func(e *colly.HTMLElement) {
-		goquerySelection := e.DOM
-
-		price := ""
-		goquerySelection.Find(`div.items-center div.leading-9`).Each (func(index int,item *goquery.Selection) {
-			price = item.Text()
-		})
-		
-
-		body = body + CreateJsonStringField("asset",asset, true)
-		body = body + CreateJsonStringField("price",price, false)
-		
-	})
-
-	c.Visit("https://br.investing.com/equities/"+asset)
-
-	body = "{"+body+"}"
-
-	return body
 }
