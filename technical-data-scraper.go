@@ -24,7 +24,7 @@ func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
 		goquerySelection := e.DOM
 
 		price := ""
-		price = goquerySelection.Find(`.text-base`).Text()
+		price = goquerySelection.Find(`span[data-test=instrument-price-last]`).Text()
 		
 
 		body = body + CreateJsonStringField("from",fromCurrency, true)
@@ -61,7 +61,6 @@ func GetInvestingData(asset string) string {
 	c := colly.NewCollector(
 		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
 		colly.AllowedDomains("br.investing.com"),
-		colly.Async(true)
 	)
 
 	c.Limit(&colly.LimitRule{
@@ -69,9 +68,14 @@ func GetInvestingData(asset string) string {
 	})
 
 	// Extracts asset value
-	c.OnHTML(`body`, func(e *colly.HTMLElement) {
+	c.OnHTML(`#__next`, func(e *colly.HTMLElement) {
 		goquerySelection := e.DOM
-		price := goquerySelection.Find(`.flex div.leading-9`)
+		price := goquerySelection.Find(`.flex div.leading-9`).Text()
+
+		if price == "" {
+			price = goquerySelection.Find(`.flex div.leading-9`).Text()
+		}
+
 		
 		body = body + CreateJsonStringField("asset",asset, true)
 		body = body + CreateJsonStringField("price",price, false)
