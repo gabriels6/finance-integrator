@@ -15,6 +15,10 @@ func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
 		colly.AllowedDomains("br.investing.com"),
 	)
 
+	c.Limit(&colly.LimitRule{
+		Parallelism: 2,
+	})
+
 	// Extracts asset value
 	c.OnHTML(`#__next`, func(e *colly.HTMLElement) {
 		goquerySelection := e.DOM
@@ -38,46 +42,44 @@ func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
 
 func GetCurrentAssetData(assets []string) []byte {
 	results := ""
-	body := ""
-	asset := ""
-
-	// Instantiate default collector
-	c := colly.NewCollector(
-		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
-		colly.AllowedDomains("br.investing.com"),
-	)
-
-	c.SetRequestTimeout(120 * time.Second)
-
-	c.Limit(&colly.LimitRule{
-		Parallelism: 1,
-	})
-
-
-	// Extracts asset value
-	c.OnHTML(`#__next`, func(e *colly.HTMLElement) {
-		body = ""
-
-		goquerySelection := e.DOM
-
-		price := ""
-		price = goquerySelection.Find(`.flex div.leading-9`).Text()
-
-		body = body + CreateJsonStringField("asset",asset, true)
-		body = body + CreateJsonStringField("price",price, false)
-	})
-
 	for _, item := range assets {
-		asset = item
-		c.Visit("https://br.investing.com/equities/"+asset)
-		body = "{"+body+"}"
-		results = results + body + ","
+		time.Sleep(time.Second * 1/100)
+		results = results + GetInvestingData(item) + ","
 	}
-
 	if len(results) > 0 {
 		// Removes last comma
 		results = results[:len(results) - 1]
 	}
 	results = "["+results+"]"
 	return []byte(results)
+}
+
+func GetInvestingData(asset string) string {
+	body := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("br.investing.com"),
+		colly.Async(true)
+	)
+
+	c.Limit(&colly.LimitRule{
+		Parallelism: 2,
+	})
+
+	// Extracts asset value
+	c.OnHTML(`body`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+		price := goquerySelection.Find(`.flex div.leading-9`)
+		
+		body = body + CreateJsonStringField("asset",asset, true)
+		body = body + CreateJsonStringField("price",price, false)
+	})
+
+	c.Visit("https://br.investing.com/equities/"+asset)
+
+	body = "{"+body+"}"
+
+	return body
 }
