@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gocolly/colly/v2"
 	"strings"
+	"time"
 )
 
 func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
@@ -44,8 +45,13 @@ func GetCurrentAssetData(assets []string) []byte {
 	c := colly.NewCollector(
 		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
 		colly.AllowedDomains("br.investing.com"),
-		colly.AllowURLRevisit(),
 	)
+
+	c.SetRequestTimeout(120 * time.Second)
+
+	c.Limit(&colly.LimitRule{
+		Parallelism: 1,
+	})
 
 
 	// Extracts asset value
