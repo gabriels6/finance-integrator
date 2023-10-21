@@ -15,6 +15,12 @@ func GetIndexesData(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", CDIData())	
 	} else if symbol == "IBOV" {
 		c.Data(http.StatusOK, "application/json", IBOVData())	
+	} else if symbol == "IBXX" {
+		c.Data(http.StatusOK, "application/json", IBXXData())	
+	} else if symbol == "IDIV" {
+		c.Data(http.StatusOK, "application/json", IDIVData())	
+	} else if symbol == "SP500" {
+		c.Data(http.StatusOK, "application/json", SP500Data())	
 	} else {
 		c.Data(http.StatusOK, "application/json", []byte(""))	
 	}

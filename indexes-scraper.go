@@ -107,6 +107,132 @@ func IBOVData() []byte {
 	return []byte(body)
 }
 
+func IDIVData() []byte {
+	body := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("br.advfn.com"),
+	)
+
+	// Extracts asset value
+	c.OnHTML(`body`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		goquerySelection.Find(`.TableElement:nth-child(8) table tbody tr`).Each (func(index int,item *goquery.Selection) {
+			indexItem := ""
+			
+			date := strings.Trim(item.Find("td:nth-child(1)").Text()," ")
+			value := strings.Trim(item.Find("td:nth-child(2)").Text()," ")
+
+			if date != "" {
+				indexItem = indexItem + CreateJsonStringField("date",date, true)
+				indexItem = indexItem + CreateJsonStringField("value",value, false)
+
+				indexItem = "{"+indexItem+"},"
+
+				body = body + indexItem
+			}
+		})
+	})
+
+	c.Visit("https://br.advfn.com/bolsa-de-valores/bovespa/dividend-IDIV/historico")
+
+	if len(body) > 0 {
+		// Removes last comma
+		body = body[:len(body) - 1]
+	}
+
+	body = "["+body+"]"
+
+	return []byte(body)
+}
+
+func IBXXData() []byte {
+	body := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("br.advfn.com"),
+	)
+
+	// Extracts asset value
+	c.OnHTML(`body`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		goquerySelection.Find(`.TableElement:nth-child(8) table tbody tr`).Each (func(index int,item *goquery.Selection) {
+			indexItem := ""
+			
+			date := strings.Trim(item.Find("td:nth-child(1)").Text()," ")
+			value := strings.Trim(item.Find("td:nth-child(2)").Text()," ")
+
+			if date != "" {
+				indexItem = indexItem + CreateJsonStringField("date",date, true)
+				indexItem = indexItem + CreateJsonStringField("value",value, false)
+
+				indexItem = "{"+indexItem+"},"
+
+				body = body + indexItem
+			}
+		})
+	})
+
+	c.Visit("https://br.advfn.com/bolsa-de-valores/bovespa/indice-brasil-100-IBXX/historico")
+
+	if len(body) > 0 {
+		// Removes last comma
+		body = body[:len(body) - 1]
+	}
+
+	body = "["+body+"]"
+
+	return []byte(body)
+}
+
+func SP500Data() []byte {
+	body := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("br.advfn.com"),
+	)
+
+	// Extracts asset value
+	c.OnHTML(`body`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		goquerySelection.Find(`.TableElement:nth-child(8) table tbody tr`).Each (func(index int,item *goquery.Selection) {
+			indexItem := ""
+			
+			date := strings.Trim(item.Find("td:nth-child(1)").Text()," ")
+			value := strings.Trim(item.Find("td:nth-child(2)").Text()," ")
+
+			if date != "" {
+				indexItem = indexItem + CreateJsonStringField("date",date, true)
+				indexItem = indexItem + CreateJsonStringField("value",value, false)
+
+				indexItem = "{"+indexItem+"},"
+
+				body = body + indexItem
+			}
+		})
+	})
+
+	c.Visit("https://br.advfn.com/bolsa-de-valores/spi/SP500/historico")
+
+	if len(body) > 0 {
+		// Removes last comma
+		body = body[:len(body) - 1]
+	}
+
+	body = "["+body+"]"
+
+	return []byte(body)
+}
+
 func IndexDataByInvesting(symbols string) []byte {
 
 	body := ""
