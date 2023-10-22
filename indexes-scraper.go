@@ -84,7 +84,7 @@ func IBOVData() []byte {
 			indexItem := ""
 			
 			date := item.Find("td:nth-child(1)").Text()
-			value := item.Find("td:nth-child(5)").Text()
+			value := strings.Replace(item.Find("td:nth-child(5)").Text(),".","",1)
 
 			indexItem = indexItem + CreateJsonStringField("date",date, true)
 			indexItem = indexItem + CreateJsonStringField("value",value, false)
@@ -166,7 +166,7 @@ func IDIVData() []byte {
 			indexItem := ""
 			
 			date := strings.Trim(item.Find("td:nth-child(1)").Text()," ")
-			value := strings.Trim(item.Find("td:nth-child(2)").Text()," ")
+			value := strings.Replace(item.Find("td:nth-child(2)").Text(),".","",1)
 
 			if date != "" {
 				indexItem = indexItem + CreateJsonStringField("date",date, true)
@@ -208,7 +208,7 @@ func IFIXData() []byte {
 			indexItem := ""
 			
 			date := strings.Trim(item.Find("td:nth-child(1)").Text()," ")
-			value := strings.Trim(item.Find("td:nth-child(2)").Text()," ")
+			value := strings.Replace(item.Find("td:nth-child(2)").Text(),".","",1)
 
 			if date != "" {
 				indexItem = indexItem + CreateJsonStringField("date",date, true)
@@ -250,7 +250,7 @@ func IBXXData() []byte {
 			indexItem := ""
 			
 			date := strings.Trim(item.Find("td:nth-child(1)").Text()," ")
-			value := strings.Trim(item.Find("td:nth-child(2)").Text()," ")
+			value := strings.Replace(item.Find("td:nth-child(2)").Text(),".","",1)
 
 			if date != "" {
 				indexItem = indexItem + CreateJsonStringField("date",date, true)
@@ -292,7 +292,7 @@ func SP500Data() []byte {
 			indexItem := ""
 			
 			date := strings.Trim(item.Find("td:nth-child(1)").Text()," ")
-			value := strings.Trim(item.Find("td:nth-child(2)").Text()," ")
+			value := strings.Replace(item.Find("td:nth-child(2)").Text(),".","",1)
 
 			if date != "" {
 				indexItem = indexItem + CreateJsonStringField("date",date, true)
