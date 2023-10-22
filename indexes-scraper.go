@@ -107,6 +107,48 @@ func IBOVData() []byte {
 	return []byte(body)
 }
 
+func IPCAData() []byte {
+	body := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("www.debit.com.br"),
+	)
+
+	// Extracts asset value
+	c.OnHTML(`body`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		goquerySelection.Find(`.tab-content:first-of-type table tbody tr`).Each (func(index int,item *goquery.Selection) {
+			indexItem := ""
+			
+			date := strings.Trim(item.Find("td:nth-child(1)").Text()," ")
+			value := strings.Trim(item.Find("td:nth-child(2)").Text()," ")
+
+			if date != "" {
+				indexItem = indexItem + CreateJsonStringField("date",date, true)
+				indexItem = indexItem + CreateJsonStringField("value",value, false)
+
+				indexItem = "{"+indexItem+"},"
+
+				body = body + indexItem
+			}
+		})
+	})
+
+	c.Visit("https://www.debit.com.br/tabelas/ipca-indice-nacional-de-precos-ao-consumidor-amplo")
+
+	if len(body) > 0 {
+		// Removes last comma
+		body = body[:len(body) - 1]
+	}
+
+	body = "["+body+"]"
+
+	return []byte(body)
+}
+
 func IDIVData() []byte {
 	body := ""
 

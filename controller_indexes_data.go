@@ -13,6 +13,8 @@ func GetIndexesData(c *gin.Context) {
 	}
 	if symbol == "CDI" {
 		c.Data(http.StatusOK, "application/json", CDIData())	
+	} else if symbol == "IPCA" {
+		c.Data(http.StatusOK, "application/json", IPCAData())	
 	} else if symbol == "IBOV" {
 		c.Data(http.StatusOK, "application/json", IBOVData())	
 	} else if symbol == "IBXX" {
