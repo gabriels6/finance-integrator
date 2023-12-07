@@ -95,7 +95,7 @@ func IBOVData() []byte {
 		})
 	})
 
-	c.Visit("https://br.financas.yahoo.com/quote/%5EBVSP/history?period1=946857600&period2=1685232000&interval=1mo&filter=history&frequency=1mo&includeAdjustedClose=true")
+	c.Visit("https://br.financas.yahoo.com/quote/%5EBVSP/history?period1=1641168000&period2=1701907200&interval=1mo&filter=history&frequency=1mo&includeAdjustedClose=true")
 
 	if len(body) > 0 {
 		// Removes last comma
