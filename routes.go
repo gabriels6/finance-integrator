@@ -3,11 +3,13 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"github.com/gabriels6/finance-integrator/controllers"
+	"github.com/gabriels6/finance-integrator/utils"
 )
 
 func VerifyHeaderMiddleware(c *gin.Context) {
 	tokens := c.Request.Header.Get("x_api_key")
-	if tokens != GetEnv("API_TOKEN") {
+	if tokens != utils.GetEnv("API_TOKEN") {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message":"Invalid Token"})
 		return
 	}
@@ -17,23 +19,23 @@ func VerifyHeaderMiddleware(c *gin.Context) {
 func Routes() *gin.Engine {
 	router := gin.Default()
 	router.Use(VerifyHeaderMiddleware)
-	router.GET("/alpha-vantage/search", GetSymbol)
-	router.GET("/alpha-vantage/global-quote", GetQuote)
-	router.GET("/alpha-vantage/time-series-weekly", GetTimeSeriesWeekly)
-	router.GET("/alpha-vantage/overview", GetOverview)
-	router.GET("/alpha-vantage/news", GetNews)
-	router.GET("/alpha-vantage/exchange-rate", GetExRate)
-	router.GET("/fundamentalist-data/stock", GetFundamentalistStockData)
-	router.GET("/fundamentalist-data/imobiliary-fund", GetFundamentalistImobiliaryFundData)
-	router.GET("/fundamentalist-data/imobiliary-funds",GetFundamentalistAllImobiliaryFundData)
-	router.GET("/fundamentalist-data/stocks",GetFundamentalistAllStocksData)
-	router.GET("/fundamentalist-data/dividends",GetDividendsData)
-	router.GET("/fundamentalist-data/rates",GetHistoricalExchangeRatesData)
-	router.GET("/technical-data/stock",GetTechnicalStocksData)
-	router.GET("/technical-data/exchange-rate",GetInvestingExchangeRateRoute)
-	router.GET("/indexes",GetIndexesData)
-	router.GET("/investing/indexes",GetIndexByInvesting)
-	router.GET("/fixed-income/government",GetBrazilianGovernmentBondsRoute)
-	router.GET("/fixed-income/debentures",GetDebenturesRoute)
+	router.GET("/alpha-vantage/search", controllers.GetSymbol)
+	router.GET("/alpha-vantage/global-quote", controllers.GetQuote)
+	router.GET("/alpha-vantage/time-series-weekly", controllers.GetTimeSeriesWeekly)
+	router.GET("/alpha-vantage/overview", controllers.GetOverview)
+	router.GET("/alpha-vantage/news", controllers.GetNews)
+	router.GET("/alpha-vantage/exchange-rate", controllers.GetExRate)
+	router.GET("/fundamentalist-data/stock", controllers.GetFundamentalistStockData)
+	router.GET("/fundamentalist-data/imobiliary-fund", controllers.GetFundamentalistImobiliaryFundData)
+	router.GET("/fundamentalist-data/imobiliary-funds", controllers.GetFundamentalistAllImobiliaryFundData)
+	router.GET("/fundamentalist-data/stocks", controllers.GetFundamentalistAllStocksData)
+	router.GET("/fundamentalist-data/dividends", controllers.GetDividendsData)
+	router.GET("/fundamentalist-data/rates", controllers.GetHistoricalExchangeRatesData)
+	router.GET("/technical-data/stock", controllers.GetTechnicalStocksData)
+	router.GET("/technical-data/exchange-rate", controllers.GetInvestingExchangeRateRoute)
+	router.GET("/indexes", controllers.GetIndexesData)
+	router.GET("/investing/indexes", controllers.GetIndexByInvesting)
+	router.GET("/fixed-income/government", controllers.GetBrazilianGovernmentBondsRoute)
+	router.GET("/fixed-income/debentures", controllers.GetDebenturesRoute)
 	return router
 }
