@@ -37,5 +37,7 @@ func Routes() *gin.Engine {
 	router.GET("/investing/indexes", controllers.GetIndexByInvesting)
 	router.GET("/fixed-income/government", controllers.GetBrazilianGovernmentBondsRoute)
 	router.GET("/fixed-income/debentures", controllers.GetDebenturesRoute)
+	router.GET("/yahoo/yearly-quotes", controllers.GetYearlyQuotes)
+	router.GET("/yahoo/historical-quotes", controllers.GetHistoricalQuotes)
 	return router
 }
