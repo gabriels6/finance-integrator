@@ -24,7 +24,7 @@ func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
 		goquerySelection := e.DOM
 
 		price := ""
-		price = goquerySelection.Find(`span[data-test=instrument-price-last]`).Text()
+		price = goquerySelection.Find(`div[data-test=instrument-price-last]`).Text()
 		
 
 		body = body + CreateJsonStringField("from",fromCurrency, true)
