@@ -99,6 +99,7 @@ func FinancialData(symbol string) []byte {
 	// Extracts asset value
 	c.OnHTML(`#app`, func(e *colly.HTMLElement) {
 		goquerySelection := e.DOM
+		body = body + "[\"TITLE\",\"TTM\",\"YEAR-1\",\"YEAR-2\",\"YEAR-3\"],"
 
 		goquerySelection.Find(`[data-test='fin-row']`).Each (func(index int,row *goquery.Selection) {
 			item := ""
