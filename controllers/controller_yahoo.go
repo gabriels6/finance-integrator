@@ -23,3 +23,12 @@ func GetHistoricalQuotes(c *gin.Context) {
 	}
 	c.Data(http.StatusOK, "application/json", scrapers.HistoricalQuotes(asset))
 }
+
+func GetFinancialData(c *gin.Context) {
+	asset, okAsset := c.GetQuery("asset")
+	if !okAsset {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'asset'"}`))
+		return
+	}
+	c.Data(http.StatusOK, "application/json", scrapers.FinancialData(asset))
+}

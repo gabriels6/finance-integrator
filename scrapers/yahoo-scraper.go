@@ -2,6 +2,7 @@ package scrapers
 
 import (
 	"github.com/gocolly/colly/v2"
+	"github.com/PuerkitoBio/goquery"
 	"strings"
 )
 
@@ -84,3 +85,52 @@ func HistoricalQuotes(symbol string) []byte {
 
 	return []byte(body)
 } 
+
+func FinancialData(symbol string) []byte {
+
+	body := ""
+
+	// Instantiate default collector
+	c := colly.NewCollector(
+		// Visit only domains: hackerspaces.org, wiki.hackerspaces.org
+		colly.AllowedDomains("finance.yahoo.com"),
+	)
+
+	// Extracts asset value
+	c.OnHTML(`#app`, func(e *colly.HTMLElement) {
+		goquerySelection := e.DOM
+
+		goquerySelection.Find(`[data-test='fin-row']`).Each (func(index int,row *goquery.Selection) {
+			item := ""
+
+			item = item + "\"" + strings.ToUpper(strings.Replace(row.Find(`[title]`).Text(), " ", "_", 4)) + "\","
+
+			row.Find(`[data-test='fin-col']`).Each (func(index int, col *goquery.Selection) {
+				if col.Text() == "-" {
+					item = item + "\"-\","
+				} else {
+					item = item + "" + strings.Replace(col.Text(),",","",10) + ","
+				}
+				
+			})
+
+			if len(item) > 0 {
+				// Removes last comma
+				item = item[:len(item) - 1]
+			}
+			item = "["+item+"]"
+			body = body + item + ","
+		})
+	})
+
+	c.Visit("https://finance.yahoo.com/quote/"+symbol+"/financials?p="+symbol)
+
+	if len(body) > 0 {
+		// Removes last comma
+		body = body[:len(body) - 1]
+	}
+
+	body = "["+body+"]"
+
+	return []byte(body)
+}
