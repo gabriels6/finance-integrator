@@ -34,7 +34,7 @@ func YearlyQuotes(symbol string) []byte {
 		}
 	})
 
-	c.Visit("https://query1.finance.yahoo.com/v7/finance/download/"+symbol+"?period1=1673788703&period2=1705324703&interval=1wk&events=history&includeAdjustedClose=true")
+	c.Visit("https://query1.finance.yahoo.com/v7/finance/download/"+symbol+"?period1=1675382400&period2=1767139200&interval=1wk&events=history&includeAdjustedClose=true")
 
 	if len(body) > 0 {
 		// Removes last comma
