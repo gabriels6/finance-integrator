@@ -73,7 +73,7 @@ func GetInvestingData(asset string) string {
 		price := goquerySelection.Find(`.flex div.leading-9`).Text()
 
 		if price == "" {
-			price = goquerySelection.Find(`.flex div.font-bold:first-child`).Text()
+			price = goquerySelection.Find(`[data-test="instrument-price-last"]:nth-child(1)`).Text()
 		}
 
 		
