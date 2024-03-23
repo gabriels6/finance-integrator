@@ -270,7 +270,7 @@ func GetHistoricalExchangeRates(fromCurrency string, toCurrency string) []byte {
 	rates := ""
 
 	// Extracts asset value
-	c.OnHTML(`div#content-wrap`, func(e *colly.HTMLElement) {
+	c.OnHTML(`div#hd-maintable`, func(e *colly.HTMLElement) {
 		goquerySelection := e.DOM
 
 		goquerySelection.Find("table#hist tr").Each (func(index int,item *goquery.Selection) {
@@ -278,7 +278,7 @@ func GetHistoricalExchangeRates(fromCurrency string, toCurrency string) []byte {
 			if(index > 1) {
 				rateItem := ""
 
-				dateString := strings.Split(item.Find(":nth-child(1)").Text(),"for")
+				dateString := strings.Split(item.Find(":nth-child(5)").Text(),"for")
 				rateString := strings.Split(item.Find(":nth-child(2)").Text(),"=")
 
 				if len(dateString) > 1 && len(rateString) > 1{
