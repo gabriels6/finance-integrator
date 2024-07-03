@@ -76,12 +76,26 @@ func GetInvestingData(asset string) string {
 			price = goquerySelection.Find(`[data-test="instrument-price-last"]:nth-child(1)`).Text()
 		}
 
+		if price == "" {
+			return
+		}
+
 		
 		body = body + CreateJsonStringField("asset",asset, true)
 		body = body + CreateJsonStringField("price",price, false)
 	})
 
-	c.Visit("https://br.investing.com/equities/"+asset)
+	urlArray := []string { 
+		"https://br.investing.com/equities/",
+		"https://br.investing.com/etfs/",
+	}
+
+	for _, url := range urlArray {
+		if body != "" {
+			break;
+		}
+		c.Visit(url+asset)
+	}
 
 	body = "{"+body+"}"
 
