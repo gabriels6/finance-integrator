@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
 	"github.com/gabriels6/finance-integrator/controllers"
 	"github.com/gabriels6/finance-integrator/utils"
+	"github.com/gin-gonic/gin"
 )
 
 func VerifyHeaderMiddleware(c *gin.Context) {
 	tokens := c.Request.Header.Get("x_api_key")
 	if tokens != utils.GetEnv("API_TOKEN") {
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message":"Invalid Token"})
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Invalid Token"})
 		return
 	}
 	c.Next()
@@ -40,5 +41,6 @@ func Routes() *gin.Engine {
 	router.GET("/yahoo/yearly-quotes", controllers.GetYearlyQuotes)
 	router.GET("/yahoo/historical-quotes", controllers.GetHistoricalQuotes)
 	router.GET("/yahoo/financial-data", controllers.GetFinancialData)
+	router.GET("/bcb/exchange-rate", controllers.GetBcbApiExchangeRate)
 	return router
 }

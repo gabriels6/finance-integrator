@@ -4,9 +4,11 @@ import (
 	"github.com/gocolly/colly/v2"
 	"strings"
 	"time"
+	"fmt"
 )
 
 func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
+
 	body := ""
 
 	// Instantiate default collector
@@ -83,6 +85,10 @@ func GetInvestingData(asset string) string {
 		
 		body = body + CreateJsonStringField("asset",asset, true)
 		body = body + CreateJsonStringField("price",price, false)
+	})
+
+	c.OnError(func(r *colly.Response, err error) {
+		fmt.Println("Request URL:", r.Request.URL, "failed with response:", string(r.Body), "\nError:", err)
 	})
 
 	urlArray := []string { 

@@ -1,8 +1,8 @@
 package apis
 
 import (
+	"io"
 	"net/http"
-	"io/ioutil"
 )
 
 func CallApi(url string) []byte {
@@ -10,7 +10,7 @@ func CallApi(url string) []byte {
 	if err != nil {
 		return []byte("Failed to get response")
 	}
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return []byte("Failed to get body")
 	}

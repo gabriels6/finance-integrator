@@ -7,6 +7,5 @@ import (
 func main() {
 	// Routes() - imported from routes.go
 	router := Routes()
-	router.Run(":"+utils.GetEnv("PORT"))
+	router.Run(":" + utils.GetEnv("PORT"))
 }
-
