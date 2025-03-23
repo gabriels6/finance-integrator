@@ -31,7 +31,7 @@ func GetBcbApiExchangeRateByPeriod(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'currency'"}`))
 		return
 	}
-	startTimeString, ok := c.GetQuery("startDate")
+	startTimeString, ok := c.GetQuery("start_date")
 	startDate := time.Now()
 	if ok {
 		parsedTime, err := time.Parse("2006-01-02", startTimeString)
@@ -39,7 +39,7 @@ func GetBcbApiExchangeRateByPeriod(c *gin.Context) {
 			startDate = parsedTime
 		}
 	}
-	endTimeString, ok := c.GetQuery("endDate")
+	endTimeString, ok := c.GetQuery("end_date")
 	endDate := time.Now()
 	if ok {
 		parsedTime, err := time.Parse("2006-01-02", endTimeString)
