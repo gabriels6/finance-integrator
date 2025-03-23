@@ -42,5 +42,6 @@ func Routes() *gin.Engine {
 	router.GET("/yahoo/historical-quotes", controllers.GetHistoricalQuotes)
 	router.GET("/yahoo/financial-data", controllers.GetFinancialData)
 	router.GET("/bcb/exchange-rate", controllers.GetBcbApiExchangeRate)
+	router.GET("/bcb/exchange-rate-period", controllers.GetBcbApiExchangeRateByPeriod)
 	return router
 }
