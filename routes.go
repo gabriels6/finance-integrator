@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gabriels6/finance-integrator/controllers"
+	controllertwlevedataapi "github.com/gabriels6/finance-integrator/controllers/controller_twleve_data_api"
 	"github.com/gabriels6/finance-integrator/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -43,5 +44,6 @@ func Routes() *gin.Engine {
 	router.GET("/yahoo/financial-data", controllers.GetFinancialData)
 	router.GET("/bcb/exchange-rate", controllers.GetBcbApiExchangeRate)
 	router.GET("/bcb/exchange-rate-period", controllers.GetBcbApiExchangeRateByPeriod)
+	router.GET("/twelve-data/eod-prices", controllertwlevedataapi.GetEodPrices)
 	return router
 }
