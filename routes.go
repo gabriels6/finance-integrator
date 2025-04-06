@@ -45,5 +45,7 @@ func Routes() *gin.Engine {
 	router.GET("/bcb/exchange-rate", controllers.GetBcbApiExchangeRate)
 	router.GET("/bcb/exchange-rate-period", controllers.GetBcbApiExchangeRateByPeriod)
 	router.GET("/twelve-data/eod-prices", controllertwlevedataapi.GetEodPrices)
+	router.GET("/twelve-data/stocks", controllertwlevedataapi.GetStocks)
+	router.GET("/twelve-data/etfs", controllertwlevedataapi.GetETFs)
 	return router
 }

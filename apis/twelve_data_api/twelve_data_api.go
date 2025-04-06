@@ -7,7 +7,7 @@ import (
 	"github.com/gabriels6/finance-integrator/utils"
 )
 
-const TWELVE_DATA_BASE_URL = "https://api.twelvedata.com/"
+const TWELVE_DATA_BASE_URL = "https://api.twelvedata.com"
 
 func GetSeries(symbols string) []byte {
 	return apis.CallApi(fmt.Sprintf("%s/time_series?symbol=%s&apikey=%s&interval=1day", TWELVE_DATA_BASE_URL, symbols, utils.GetEnv("TWELVE_DATA_API_KEY")))
@@ -28,4 +28,8 @@ func GetStocks() []byte {
 
 func GetStock(symbol string) []byte {
 	return apis.CallApi(fmt.Sprintf("%s/stocks?symbol=%s&apikey=%s", TWELVE_DATA_BASE_URL, symbol, utils.GetEnv("TWELVE_DATA_API_KEY")))
+}
+
+func GetETFs() []byte {
+	return apis.CallApi(fmt.Sprintf("%s/etfs?apikey=%s", TWELVE_DATA_BASE_URL, utils.GetEnv("TWELVE_DATA_API_KEY")))
 }

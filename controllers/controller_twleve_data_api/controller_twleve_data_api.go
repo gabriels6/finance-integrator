@@ -34,3 +34,11 @@ func GetEodPrices(c *gin.Context) {
 	}
 	c.Data(http.StatusOK, "application/json", twelvedataapi.GetEodPrices(symbols))
 }
+
+func GetStocks(c *gin.Context) {
+	c.Data(http.StatusOK, "application/json", twelvedataapi.GetStocks())
+}
+
+func GetETFs(c *gin.Context) {
+	c.Data(http.StatusOK, "application/json", twelvedataapi.GetETFs())
+}
