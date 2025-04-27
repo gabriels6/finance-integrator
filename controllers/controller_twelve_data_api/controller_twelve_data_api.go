@@ -1,4 +1,4 @@
-package controllertwlevedataapi
+package controllertwelvedataapi
 
 import (
 	"net/http"
@@ -23,7 +23,7 @@ func GetTimeSeriesDaily(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbol'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", apis.TimeSeriesWeekly(symbol))
+	c.Data(http.StatusOK, "application/json", twelvedataapi.GetSeries(symbol))
 }
 
 func GetEodPrices(c *gin.Context) {
