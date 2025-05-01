@@ -1,6 +1,7 @@
 package controllertwelvedataapi
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gabriels6/finance-integrator/apis"
@@ -41,4 +42,22 @@ func GetStocks(c *gin.Context) {
 
 func GetETFs(c *gin.Context) {
 	c.Data(http.StatusOK, "application/json", twelvedataapi.GetETFs())
+}
+
+func GatherWebsocketRealTimeQuotes(c *gin.Context) {
+	symbols, ok := c.GetQuery("symbols")
+	if !ok {
+		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbols'"}`))
+		return
+	}
+	err := twelvedataapi.GatherWebsocketRealTimeQuotes(symbols)
+	message := ""
+	if err != nil {
+		message = fmt.Sprintf(`{"message": "%v"}`, err)
+	}
+	c.Data(http.StatusOK, "application/json", []byte(message))
+}
+
+func GetWsRealtimePrices(c *gin.Context) {
+	c.Data(http.StatusOK, "application/json", twelvedataapi.GetWsRealtimePrices())
 }
