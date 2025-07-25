@@ -16,6 +16,8 @@ func StocksScreener() []byte {
 	)
 
 	c.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("Accept", "application/json, text/plain, */*")
+		r.Headers.Set("Origin", "https://www.nasdaq.com")
 		r.Headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36")
 		r.Headers.Set("Referer", "https://www.nasdaq.com/")
 	})
