@@ -50,5 +50,6 @@ func Routes() *gin.Engine {
 	router.GET("/twelve-data/time-series", controllertwelvedataapi.GetTimeSeriesDaily)
 	router.GET("/twelve-data/gather-prices", controllertwelvedataapi.GatherWebsocketRealTimeQuotes)
 	router.GET("/twelve-data/realtime-prices", controllertwelvedataapi.GetWsRealtimePrices)
+	router.GET("/nasdaq/stock-screener", controllers.GetNasdaqStockScreener)
 	return router
 }
