@@ -10,3 +10,7 @@ import (
 func GetNasdaqStockScreener(c *gin.Context) {
 	c.Data(http.StatusOK, "application/json", apis.StocksScreener())
 }
+
+func GetNasdaqEtfScreener(c *gin.Context) {
+	c.Data(http.StatusOK, "application/json", apis.EtfScreener())
+}
