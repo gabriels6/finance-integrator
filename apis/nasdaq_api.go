@@ -16,10 +16,6 @@ func StocksScreener() []byte {
 	)
 
 	c.OnRequest(func(r *colly.Request) {
-		r.Headers.Set(":authority", "api.nasdaq.com")
-		r.Headers.Set(":method", "GET")
-		r.Headers.Set(":path", "/api/screener/stocks")
-		r.Headers.Set(":scheme", "https")
 		r.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
 		r.Headers.Set("Accept-Encoding", "gzip, deflate, br, zstd")
 		r.Headers.Set("Accept-Language", "pt-BR,pt;q=0.5")
