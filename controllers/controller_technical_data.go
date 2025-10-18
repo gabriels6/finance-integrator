@@ -1,9 +1,10 @@
-package main
+package controllers
 
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"strings"
+	"github.com/gabriels6/finance-integrator/scrapers"
 )
 
 func GetTechnicalStocksData(c *gin.Context) {
@@ -12,7 +13,7 @@ func GetTechnicalStocksData(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'assets'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", GetCurrentAssetData(strings.Split(assets,",")))	
+	c.Data(http.StatusOK, "application/json", scrapers.GetCurrentAssetData(strings.Split(assets,",")))	
 }
 
 func GetInvestingExchangeRateRoute(c *gin.Context) {
@@ -26,5 +27,5 @@ func GetInvestingExchangeRateRoute(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'toCurrency'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", GetInvestingExchangeRate(fromCurrency, toCurrency))	
+	c.Data(http.StatusOK, "application/json", scrapers.GetInvestingExchangeRate(fromCurrency, toCurrency))	
 }

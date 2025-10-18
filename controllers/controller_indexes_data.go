@@ -1,8 +1,9 @@
-package main
+package controllers
 
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"github.com/gabriels6/finance-integrator/scrapers"
 )
 
 func GetIndexesData(c *gin.Context) {
@@ -12,19 +13,19 @@ func GetIndexesData(c *gin.Context) {
 		return
 	}
 	if symbol == "CDI" {
-		c.Data(http.StatusOK, "application/json", CDIData())	
+		c.Data(http.StatusOK, "application/json", scrapers.CDIData())	
 	} else if symbol == "IPCA" {
-		c.Data(http.StatusOK, "application/json", IPCAData())	
+		c.Data(http.StatusOK, "application/json", scrapers.IPCAData())	
 	} else if symbol == "IBOV" {
-		c.Data(http.StatusOK, "application/json", IBOVData())	
+		c.Data(http.StatusOK, "application/json", scrapers.IBOVData())	
 	} else if symbol == "IBXX" {
-		c.Data(http.StatusOK, "application/json", IBXXData())	
+		c.Data(http.StatusOK, "application/json", scrapers.IBXXData())	
 	} else if symbol == "IDIV" {
-		c.Data(http.StatusOK, "application/json", IDIVData())	
+		c.Data(http.StatusOK, "application/json", scrapers.IDIVData())	
 	} else if symbol == "IFIX" {
-		c.Data(http.StatusOK, "application/json", IFIXData())	
+		c.Data(http.StatusOK, "application/json", scrapers.IFIXData())	
 	} else if symbol == "SP500" {
-		c.Data(http.StatusOK, "application/json", SP500Data())	
+		c.Data(http.StatusOK, "application/json", scrapers.SP500Data())	
 	} else {
 		c.Data(http.StatusOK, "application/json", []byte(""))	
 	}
@@ -37,5 +38,5 @@ func GetIndexByInvesting(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbols'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", IndexDataByInvesting(symbols))	
+	c.Data(http.StatusOK, "application/json", scrapers.IndexDataByInvesting(symbols))	
 }

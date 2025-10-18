@@ -1,9 +1,10 @@
-package main
+package controllers
 
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"github.com/gabriels6/finance-integrator/scrapers"
 )
 
 func GetFundamentalistStockData(c *gin.Context) {
@@ -12,7 +13,7 @@ func GetFundamentalistStockData(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'asset'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", GetStockData(asset))	
+	c.Data(http.StatusOK, "application/json", scrapers.GetStockData(asset))	
 }
 
 func GetFundamentalistImobiliaryFundData(c *gin.Context) {
@@ -21,7 +22,7 @@ func GetFundamentalistImobiliaryFundData(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'asset'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", GetImobiliaryFundData(asset))	
+	c.Data(http.StatusOK, "application/json", scrapers.GetImobiliaryFundData(asset))	
 }
 
 func GetFundamentalistAllImobiliaryFundData(c *gin.Context) {
@@ -49,7 +50,7 @@ func GetFundamentalistAllImobiliaryFundData(c *gin.Context) {
 		return
 	}
 
-	c.Data(http.StatusOK, "application/json", GetAllImoboliaryFundsData(resultOffset, resultAmountOfElements))
+	c.Data(http.StatusOK, "application/json", scrapers.GetAllImoboliaryFundsData(resultOffset, resultAmountOfElements))
 }
 
 func GetFundamentalistAllStocksData(c *gin.Context) {
@@ -71,7 +72,7 @@ func GetFundamentalistAllStocksData(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Error converting param: 'offset'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", GetAllFundamentslistStocksData(pagesAmount, offsetAmount))
+	c.Data(http.StatusOK, "application/json", scrapers.GetAllFundamentslistStocksData(pagesAmount, offsetAmount))
 }
 
 func GetDividendsData(c *gin.Context) {
@@ -80,7 +81,7 @@ func GetDividendsData(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'asset'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", GetDividends(asset))	
+	c.Data(http.StatusOK, "application/json", scrapers.GetDividends(asset))	
 }
 
 func GetHistoricalExchangeRatesData(c *gin.Context) {
@@ -90,5 +91,5 @@ func GetHistoricalExchangeRatesData(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Params 'fromCurrency' or 'toCurrency' not found."}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", GetHistoricalExchangeRates(fromCurrency, toCurrency))
+	c.Data(http.StatusOK, "application/json", scrapers.GetHistoricalExchangeRates(fromCurrency, toCurrency))
 }

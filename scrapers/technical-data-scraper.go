@@ -1,12 +1,14 @@
-package main
+package scrapers
 
 import (
 	"github.com/gocolly/colly/v2"
 	"strings"
 	"time"
+	"fmt"
 )
 
 func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
+
 	body := ""
 
 	// Instantiate default collector
@@ -24,7 +26,7 @@ func GetInvestingExchangeRate(fromCurrency string, toCurrency string) []byte {
 		goquerySelection := e.DOM
 
 		price := ""
-		price = goquerySelection.Find(`span[data-test=instrument-price-last]`).Text()
+		price = goquerySelection.Find(`div[data-test=instrument-price-last]`).Text()
 		
 
 		body = body + CreateJsonStringField("from",fromCurrency, true)
@@ -73,7 +75,11 @@ func GetInvestingData(asset string) string {
 		price := goquerySelection.Find(`.flex div.leading-9`).Text()
 
 		if price == "" {
-			price = goquerySelection.Find(`.flex div.font-bold:first-child`).Text()
+			price = goquerySelection.Find(`[data-test="instrument-price-last"]:nth-child(1)`).Text()
+		}
+
+		if price == "" {
+			return
 		}
 
 		
@@ -81,7 +87,21 @@ func GetInvestingData(asset string) string {
 		body = body + CreateJsonStringField("price",price, false)
 	})
 
-	c.Visit("https://br.investing.com/equities/"+asset)
+	c.OnError(func(r *colly.Response, err error) {
+		fmt.Println("Request URL:", r.Request.URL, "failed with response:", string(r.Body), "\nError:", err)
+	})
+
+	urlArray := []string { 
+		"https://br.investing.com/equities/",
+		"https://br.investing.com/etfs/",
+	}
+
+	for _, url := range urlArray {
+		if body != "" {
+			break;
+		}
+		c.Visit(url+asset)
+	}
 
 	body = "{"+body+"}"
 

@@ -1,13 +1,14 @@
-package main
+package controllers
 
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"time"
+	"github.com/gabriels6/finance-integrator/scrapers"
 )
 
 func GetBrazilianGovernmentBondsRoute(c *gin.Context) {
-	c.Data(http.StatusOK, "application/json", GetBrazilianGovernmentBonds())	
+	c.Data(http.StatusOK, "application/json", scrapers.GetBrazilianGovernmentBonds())	
 }
 
 func GetDebenturesRoute(c *gin.Context) {
@@ -17,5 +18,5 @@ func GetDebenturesRoute(c *gin.Context) {
 		parsedTime, err := time.Parse("2006-01-02", timeString)
 		if err == nil { date = parsedTime }
 	}
-	c.Data(http.StatusOK, "application/json", GetDebentures(date))	
+	c.Data(http.StatusOK, "application/json", scrapers.GetDebentures(date))	
 }

@@ -1,8 +1,9 @@
-package main
+package controllers
 
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"github.com/gabriels6/finance-integrator/apis"
 )
 
 func GetSymbol(c *gin.Context) {
@@ -11,7 +12,7 @@ func GetSymbol(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'keyword'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", SearchSymbol(keyword))	
+	c.Data(http.StatusOK, "application/json", apis.SearchSymbol(keyword))	
 }
 
 func GetQuote(c *gin.Context) {
@@ -20,7 +21,7 @@ func GetQuote(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbol'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", GlobalQuotes(symbol))
+	c.Data(http.StatusOK, "application/json", apis.GlobalQuotes(symbol))
 }
 
 func GetTimeSeriesWeekly(c *gin.Context) {
@@ -29,7 +30,7 @@ func GetTimeSeriesWeekly(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbol'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", TimeSeriesWeekly(symbol))
+	c.Data(http.StatusOK, "application/json", apis.TimeSeriesWeekly(symbol))
 }
 
 func GetOverview(c *gin.Context) {
@@ -38,7 +39,7 @@ func GetOverview(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbol'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", Overview(symbol))
+	c.Data(http.StatusOK, "application/json", apis.Overview(symbol))
 }
 
 func GetNews(c *gin.Context) {
@@ -50,7 +51,7 @@ func GetNews(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'symbols'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", News(symbols, topics, sort, limit))
+	c.Data(http.StatusOK, "application/json", apis.News(symbols, topics, sort, limit))
 }
 
 func GetExRate(c *gin.Context) {
@@ -64,5 +65,5 @@ func GetExRate(c *gin.Context) {
 		c.Data(http.StatusOK, "application/json", []byte(`{"message":"Not found parameter: 'toCurrency'"}`))
 		return
 	}
-	c.Data(http.StatusOK, "application/json", ExchangeRate(fromCurrency, toCurrency))
+	c.Data(http.StatusOK, "application/json", apis.ExchangeRate(fromCurrency, toCurrency))
 }
